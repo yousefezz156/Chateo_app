@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "573264146346",
+    "project_id": "chateo-app-7311d",
+    "storage_bucket": "chateo-app-7311d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573264146346:android:c192e2104f5653c2e1c5d3",
+        "android_client_info": {
+          "package_name": "com.example.chateo_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8pidDHGN3Yz8aV3k6_MUKp2UBUS_cAeY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
