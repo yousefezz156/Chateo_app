@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.chateo_app.Navigations.AppRoutes
-import com.example.chateo_app.chat.insiderChat.InsiderChatScaffold
-import com.example.chateo_app.chat.insiderChat.accesgallery.Gallery_screen
+import com.example.chateo_app.personnalchat.insiderChat.InsiderChatScaffold
+import com.example.chateo_app.personnalchat.insiderChat.accesgallery.Gallery_screen
 import com.example.chateo_app.ui.theme.Chateo_appTheme
 
 class MainActivity : ComponentActivity() {

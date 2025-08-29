@@ -7,17 +7,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.chateo_app.chat.ScaffoldChatTextScreen
-import com.example.chateo_app.chat.Scaffold_chat_screen
-import com.example.chateo_app.chat.insiderChat.InsiderChatScaffold
-import com.example.chateo_app.chat.insiderChat.InsiderChatViewModel
-import com.example.chateo_app.chat.insiderChat.accesgallery.GalleryViewModel
-import com.example.chateo_app.chat.insiderChat.accesgallery.Gallery_screen
-import com.example.chateo_app.sign_up_screens.Otp_screen
-import com.example.chateo_app.sign_up_screens.Profile_account
+import com.example.chateo_app.chat.presentation.Scaffold_chat_screen
+import com.example.chateo_app.personnalchat.insiderChat.InsiderChatScaffold
+import com.example.chateo_app.personnalchat.insiderChat.InsiderChatViewModel
+import com.example.chateo_app.personnalchat.insiderChat.accesgallery.GalleryViewModel
+import com.example.chateo_app.personnalchat.insiderChat.accesgallery.Gallery_screen
+import com.example.chateo_app.verfication.presentation.Otp_screen
+import com.example.chateo_app.profileaccount.presentation.Profile_account
 
-import com.example.chateo_app.sign_up_screens.Verfication_phone
-import com.example.chateo_app.supabase.ViewModel.SB_authViewModel
+import com.example.chateo_app.verfication.presentation.Verfication_phone
+import com.example.chateo_app.verfication.presentation.SB_authViewModel
 
 object AppRoutes {
 
@@ -42,17 +41,17 @@ fun AppRoutes() {
     val galleryViewModel: GalleryViewModel = viewModel()
     val insiderChatViewModel: InsiderChatViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = AppRoutes.TEXTCHAT) {
+    NavHost(navController = navController, startDestination = AppRoutes.PROFILE) {
         composable(route = AppRoutes.TEXTCHAT) { InsiderChatScaffold(galleryViewModel = galleryViewModel, insiderChatViewModel = insiderChatViewModel,navController = navController) }
-        composable(route = AppRoutes.VERIFICATION_PHONE){ Verfication_phone(authViewModel = authViewModel,navController = navController) }
+        composable(route = AppRoutes.VERIFICATION_PHONE){ Verfication_phone(navController = navController) }
         composable(route = "${AppRoutes.OTP}/{total_phone}", arguments = listOf(
             navArgument("total_phone"){type= NavType.StringType}
         )) {backStackEntry ->
             val total_phone = backStackEntry.arguments?.getString("total_phone") ?: ""
-            Otp_screen(total_phone =total_phone, authViewModel = authViewModel,navController=navController ) }
-        composable(route = AppRoutes.PROFILE){ Profile_account(navController)}
-        composable(route = AppRoutes.MAINCHAT){ Scaffold_chat_screen(navController)}
-        composable(route = AppRoutes.GALLERY){ Gallery_screen(galleryViewModel = galleryViewModel,navController = navController)}
+            Otp_screen(total_phone =total_phone,navController=navController ) }
+        composable(route = AppRoutes.PROFILE){ Profile_account(navController) }
+        composable(route = AppRoutes.MAINCHAT){ Scaffold_chat_screen(navController) }
+        composable(route = AppRoutes.GALLERY){ Gallery_screen(galleryViewModel = galleryViewModel,navController = navController) }
 
     }
 }

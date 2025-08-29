@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">chateo_app</string>
+    <string name="Enter_Phone_Number">"Enter Your Phone Number"</string>
+    <string name="Please_confirm_your_country_code_and_enter">"Please confirm your country code and enter"</string>
+    <string name="your_phone_number">"your phone number"</string>
+    <string name="phoneNumber">Phone Number</string>
+    <string name="Send_OTP">"Send OTP"</string>
+    <string name="firstName">First Name (Required)</string>
+    <string name="lastName">Last Name (Optional)</string>"
 </resources>
