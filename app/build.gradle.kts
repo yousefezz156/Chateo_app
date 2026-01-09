@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     kotlin("plugin.serialization") version "1.9.0"
 
+
 }
 
 
@@ -102,23 +103,37 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
     implementation("com.google.firebase:firebase-auth")
 
-    //Supabase
-    implementation(platform("io.github.jan-tennert.supabase:bom:3.1.1")) // BOM for version management
-    implementation("io.github.jan-tennert.supabase:postgrest-kt")
-    implementation("io.github.jan-tennert.supabase:auth-kt") // GoTrue module for authentication
-    implementation("io.github.jan-tennert.supabase:realtime-kt") // Realtime module (optional)
+//    //Supabase
+//    implementation(platform("io.github.jan-tennert.supabase:bom:3.1.1")) // BOM for version management
+//    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+//    implementation("io.github.jan-tennert.supabase:auth-kt") // GoTrue module for authentication
+//    implementation("io.github.jan-tennert.supabase:realtime-kt") // Realtime module (optional)
 
     //ktor
-    implementation("io.ktor:ktor-client-android:3.1.0")
+//    implementation("io.ktor:ktor-client-android:3.1.0")
     implementation("io.coil-kt.coil3:coil-compose:3.1.0")
 
     //Exo
     implementation("androidx.media3:media3-exoplayer:1.2.1")
     implementation("androidx.media3:media3-ui:1.2.1")
 
+    // Ktor core & engines
+    implementation("io.ktor:ktor-client-core:2.3.6")
+    implementation("io.ktor:ktor-client-okhttp:2.3.6") // OkHttp engine for Android
 
+// Plugins
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.6")
+    implementation("io.ktor:ktor-client-logging:2.3.6")
+    implementation("io.ktor:ktor-client-auth:2.3.6")
+    implementation("io.ktor:ktor-client-encoding:2.3.6")
+    implementation("io.ktor:ktor-client-resources:2.3.6")
+    implementation("io.ktor:ktor-client-websockets:2.3.6")
 
+// JSON serialization
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.6")
 
+    // country code
+    implementation("com.googlecode.libphonenumber:libphonenumber:8.13.27")
 
 
 

@@ -58,14 +58,18 @@ import com.example.chateo_app.DataNumbers.Numbers
 import com.example.chateo_app.DataNumbers.NumbersList
 import com.example.chateo_app.Navigations.AppRoutes
 import com.example.chateo_app.R
-import com.example.chateo_app.supabase.model.ApiResponse
+//import com.example.chateo_app.supabase.model.ApiResponse
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Verfication_phone(modifier: Modifier = Modifier, navController: NavController) {
 
-   // val navOTP by authViewModel.navigateToOtp.collectAsState()
+    val context = LocalContext.current
+
+    val countryDefaultCode= NumbersList().getDeviceNetworkCountry(context)
+
+    // val navOTP by authViewModel.navigateToOtp.collectAsState()
     var showNumList by remember {
         mutableStateOf(false)
     }
@@ -76,7 +80,6 @@ fun Verfication_phone(modifier: Modifier = Modifier, navController: NavControlle
     var phone by remember {
         mutableStateOf("")
     }
-    val context = LocalContext.current
 
     //val isLoading by authViewModel.authresponse.collectAsState()
 
@@ -116,32 +119,44 @@ fun Verfication_phone(modifier: Modifier = Modifier, navController: NavControlle
                     modifier = modifier.fillMaxWidth()
                 ) {
                     Spacer(modifier = modifier.padding(top = 40.dp))
-                    Text(text = isSelected?.num ?: "", textAlign = TextAlign.Center)
+                    Text(text = if(isSelected!=null) isSelected?.num.toString() else countryDefaultCode, fontSize = 16.sp, textAlign = TextAlign.Center)
                 }
             }
 
             Spacer(modifier = modifier.padding(8.dp))
-            TextField(
+            BasicTextField(
                 value = phone,
                 onValueChange = { phone = it },
+                singleLine = true,
                 modifier = modifier
                     .fillMaxWidth()
-                    .clip(shape = RoundedCornerShape(12.dp))
-                    //.padding(end = 20.dp)
-                    //.height(46.dp)
-                        ,
-                singleLine = true,
-                placeholder = { Text(stringResource(id = R.string.phoneNumber), fontSize = 12.sp) },
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = colorResource(id = R.color.offWhite),
-                    unfocusedContainerColor = colorResource(id = R.color.offWhite),
-                    focusedIndicatorColor = colorResource(id = R.color.offWhite),
-                    unfocusedIndicatorColor = colorResource(id = R.color.offWhite),
-                    cursorColor = colorResource(id = R.color.black),
-                    focusedLabelColor = colorResource(id = R.color.offWhite),
-                    unfocusedLabelColor = colorResource(id = R.color.offWhite)
-                )
+                    .height(46.dp),
+                decorationBox = { innerTextField ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(colorResource(id = R.color.offWhite))
+                            .padding(horizontal = 16.dp),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+
+                        // Placeholder
+                        if (phone.isEmpty()) {
+                            Text(
+                                text = stringResource(id = R.string.phoneNumber),
+                                fontSize = 12.sp,
+                                color = Color.Gray
+                            )
+                        }
+
+                        // Actual text field
+                        innerTextField()
+                    }
+                }
             )
+
+
         }
         Spacer(modifier = modifier.padding(8.dp))
         Button(

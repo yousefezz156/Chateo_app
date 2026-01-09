@@ -1,5 +1,6 @@
 package com.example.chateo_app.profileaccount.presentation
 
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
@@ -34,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -56,16 +58,16 @@ fun Profile_account(navController: NavController, modifier: Modifier = Modifier)
     var lastName by remember {
         mutableStateOf("")
     }
-    // State to hold selected image URI
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    // Launcher to open gallery
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri: android.net.Uri? ->
             selectedImageUri =uri?.toCoilUri()
         }
     )
+
+    val context = LocalContext.current
 
 
     Column(
@@ -75,70 +77,36 @@ fun Profile_account(navController: NavController, modifier: Modifier = Modifier)
             .padding(start = 24.dp, end = 24.dp)
     ) {
         Spacer(modifier = modifier.padding(bottom = 36.dp))
-        Box {
-            // Profile Circle
-            Box(
-                modifier = Modifier
-                    .size(90.dp)
-                    .clip(CircleShape)
-                    .background(color = colorResource(id = R.color.offWhite)),
-                contentAlignment = Alignment.Center
-            ) {
-                if(selectedImageUri!=null){
-                    AsyncImage(
-                        model = selectedImageUri,
-                        contentDescription = "Profile Image",
-                        contentScale = ContentScale.Crop, // crop to fit circle
-                        modifier = Modifier
-                            .size(90.dp)
-                            .clip(CircleShape)
-                    )
-                }else {
-                    Image(
-                        painter = painterResource(id = R.drawable.vector),
-                        contentDescription = null,
-                        modifier = modifier.size(50.dp)
-                    )
-                }
-            }
+        ProfileImage(
+            selectedImageUri = selectedImageUri,
+            onClick = { galleryLauncher.launch("image/*") }
+        )
 
-            // Plus Icon
-            Box(
-                modifier = Modifier
-                    .size(20.dp) // Size of the Plus Icon background
-                    .clip(CircleShape)
-                    .background(Color.Black) // Background for the plus icon
-                    .border(1.dp, Color.Black, CircleShape) // Optional border for styling
-                    .align(Alignment.BottomEnd) // Align to the bottom end of the parent Box
-                ,
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = modifier.clickable { galleryLauncher.launch("image/*")}
-                    //  modifier = Modifier.size(14.dp) // Adjust the size of the plus icon
-                )
-            }
-        }
+
+
         Spacer(modifier = modifier.padding(12.dp))
 
         ScreenTextField(
-            firstName = firstName, onValueChange = { firstName = it }, placeHolder = stringResource(
+            name = firstName, onValueChange = { firstName = it }, placeHolder = stringResource(
                 id = R.string.firstName
             )
         )
 
         Spacer(modifier = modifier.padding(12.dp))
         ScreenTextField(
-            firstName = lastName, onValueChange = { lastName = it }, placeHolder = stringResource(
+            name = lastName, onValueChange = { lastName = it }, placeHolder = stringResource(
                 id = R.string.lastName
             )
         )
         Spacer(modifier = modifier.padding(32.dp))
         Button(
-            onClick = { navController.navigate(route = AppRoutes.MAiN_CONTACT) },
+            onClick = {
+                if (firstName.isNotBlank())
+                    navController.navigate(route = AppRoutes.MAIN_CONTACT)
+                else
+                    Toast.makeText(context, "Please enter your first name", Toast.LENGTH_SHORT)
+                        .show()
+            },
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)
@@ -152,13 +120,14 @@ fun Profile_account(navController: NavController, modifier: Modifier = Modifier)
 
 @Composable
 fun ScreenTextField(
-    firstName: String,
+    name: String,
     onValueChange: (String) -> Unit,
     placeHolder: String,
     modifier: Modifier = Modifier
 ) {
-    TextField(value = firstName,
+    TextField(value = name,
         onValueChange = { onValueChange(it) },
+        textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black),
         colors = TextFieldDefaults.colors(
             focusedContainerColor = colorResource(id = R.color.offWhite),
             unfocusedContainerColor = colorResource(id = R.color.offWhite),

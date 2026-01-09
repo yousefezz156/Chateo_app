@@ -1,5 +1,6 @@
 package com.example.chateo_app.contact.presentation
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,6 +19,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,12 +41,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.chateo_app.Navigations.NavigationBottomBar
 import com.example.chateo_app.R
 import com.example.chateo_app.contact.presentation.mvi.ContactViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Scaffold_contact(viewModel: ContactViewModel,modifier: Modifier = Modifier) {
+fun Scaffold_contact(viewModel: ContactViewModel,navController: NavController,modifier: Modifier = Modifier) {
     Scaffold(topBar = {
         TopAppBar(title = { Text(text = "Contacts") }, actions = {
             Icon(
@@ -52,21 +56,25 @@ fun Scaffold_contact(viewModel: ContactViewModel,modifier: Modifier = Modifier) 
                 contentDescription = null, modifier = modifier.clickable { }
             )
         })
+    }, bottomBar = {
+        BottomAppBar {
+            NavigationBottomBar(navController = navController)
+        }
     }) { innerpadding ->
         Box(modifier = modifier.padding(innerpadding)) {
-            Contact_screen(viewModel=viewModel)
+            Contact_screen(navController=navController,viewModel=viewModel)
         }
     }
 
 }
 
 @Composable
-fun Contact_screen(modifier: Modifier = Modifier, viewModel: ContactViewModel) {
+fun Contact_screen(modifier: Modifier = Modifier, navController: NavController,viewModel: ContactViewModel) {
    // val searchText by viewModel.searchText.collectAsState()
 
     var searchText by remember { mutableStateOf("") }
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth().padding(horizontal =16.dp)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -143,23 +151,25 @@ fun Contact_screen(modifier: Modifier = Modifier, viewModel: ContactViewModel) {
                             .clip(shape = RoundedCornerShape(12.dp))
                             .fillMaxWidth()
                 )
-            
             Spacer(modifier = modifier.padding(8.dp))
-            
-            contactLazyColumn(viewModel = viewModel)
+
             }
+        contactLazyColumn(navController = navController,viewModel = viewModel)
         }
     }
 
 @Composable
-fun contactLazyColumn(viewModel: ContactViewModel,modifier: Modifier = Modifier) {
+fun contactLazyColumn(navController: NavController,viewModel: ContactViewModel,modifier: Modifier = Modifier) {
 
     val contact by viewModel.state.collectAsState()
+
+    Log.d("contact", contact.mockContacts.size.toString())
 
     LazyColumn {
         items(contact.mockContacts){
             contact ->
-            MockContactCardView(mockDataContact = contact)
+            MockContactCardView(navController = navController,mockDataContact = contact)
+            Log.d("contact", contact.toString())
         }
     }
 }
@@ -169,5 +179,5 @@ fun contactLazyColumn(viewModel: ContactViewModel,modifier: Modifier = Modifier)
 @Preview(showBackground = true)
 @Composable
 private fun Contact_screen_prev() {
-    Scaffold_contact(remember { ContactViewModel() })
+    //Scaffold_contact(remember { ContactViewModel() })
 }

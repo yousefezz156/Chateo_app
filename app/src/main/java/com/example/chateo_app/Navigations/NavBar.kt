@@ -23,10 +23,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.chateo_app.R
 
 @Composable
-fun NavigationBottomBar(modifier: Modifier = Modifier) {
+fun NavigationBottomBar(navController: NavController, modifier: Modifier = Modifier) {
     val navBottomItem = listOf(
 
         NavBBData("Contacts", R.drawable.contacts),
@@ -36,14 +37,25 @@ fun NavigationBottomBar(modifier: Modifier = Modifier) {
     )
 
     var selectedIndexItem by remember {
-        mutableStateOf(1)
+        mutableStateOf(0)
     }
 
     NavigationBar(modifier = modifier.background(color = Color.White)){
         navBottomItem.forEachIndexed{index, item ->
             NavigationBarItem(
                 selected =selectedIndexItem == index,
-                onClick = { selectedIndexItem = index },
+                onClick = { selectedIndexItem = index
+                          if(selectedIndexItem == 0){
+                              //navigate to contacts
+                              navController.navigate("contact")
+                              }else if(selectedIndexItem == 1){
+                              //navigate to chats
+                              navController.navigate("mainchat")
+
+                          }else if(selectedIndexItem == 2){
+                              //navigate to settings
+                          }
+                },
                 icon = { if(selectedIndexItem != index){
                     item.icon.let { Icon(painter = painterResource(id = it), contentDescription =null , modifier.size(60.dp))}
                 }else{

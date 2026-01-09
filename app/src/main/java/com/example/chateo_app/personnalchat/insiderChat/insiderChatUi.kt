@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -76,6 +77,7 @@ import com.example.chateo_app.personnalchat.insiderChat.accesgallery.getMimeType
 import kotlinx.coroutines.delay
 import java.io.File
 import java.util.UUID
+import kotlin.math.absoluteValue
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,8 +86,6 @@ fun InsiderChatScaffold(
     modifier: Modifier = Modifier, galleryViewModel: GalleryViewModel, insiderChatViewModel: InsiderChatViewModel,
     navController: NavController
 ) {
-
-
 
 
     var mediaUri by remember {
@@ -102,7 +102,7 @@ fun InsiderChatScaffold(
     var audioFile by remember {
         mutableStateOf<File?>(null)
     }
-    var recorder: MediaRecorder? by remember {
+    var recorderr: MediaRecorder? by remember {
         mutableStateOf(null)
     }
     var drag by remember {
@@ -122,174 +122,114 @@ fun InsiderChatScaffold(
     }
 
 
-    Scaffold(topBar = {
-        TopAppBar(title = { Text(text = "yousef") }, actions = {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = null,
-                modifier = modifier.clickable { })
-        })
-    }, bottomBar = {
-        if (!showIcons) {
-            BottomAppBar {
-                Row(modifier = modifier.fillMaxWidth()) {
-
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "yousef") },
+                actions = {
                     Icon(
-                        imageVector = Icons.Default.Add,
+                        imageVector = Icons.Default.Search,
                         contentDescription = null,
-                        tint = colorResource(id = R.color.light_gray),
-                        modifier = modifier
-                            .align(Alignment.CenterVertically)
-                            .clickable {
-                                showIcons = true;
-                            }
+                        modifier = modifier.clickable { }
                     )
+                }
+            )
+        },
+        bottomBar = {
+            if (!showIcons) {
+                BottomAppBar {
+                    Row(modifier = modifier.fillMaxWidth()) {
 
-                    Spacer(modifier = modifier.padding(horizontal = 6.dp))
-                    Box(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .height(36.dp)
-                            .weight(1f)
-                            .background(
-                                color = colorResource(id = R.color.light_gray),
-                                shape = RoundedCornerShape(4.dp)
-                            )
-                    ) {
-                        BasicTextField(
-                            value = message, onValueChange = { message = it }, modifier = modifier
-                                .padding(horizontal = 24.dp)
-                                .background(
-                                    colorResource(id = R.color.light_gray)
-                                )
-                                .align(Alignment.CenterStart)
-                        )
-
-                    }
-                    Spacer(modifier = modifier.padding(horizontal = 10.dp))
-                    if (message.isNotBlank()) {
-                        androidx.compose.material3.Icon(
-                            imageVector = Icons.Default.Send,
+                        Icon(
+                            imageVector = Icons.Default.Add,
                             contentDescription = null,
+                            tint = colorResource(id = R.color.light_gray),
                             modifier = modifier
                                 .align(Alignment.CenterVertically)
-                                .clickable {
+                                .clickable { showIcons = true }
+                        )
 
-                                    messages +=
-                                        Message(
-                                            id = UUID
-                                                .randomUUID()
-                                                .toString(),
+                        Spacer(modifier = modifier.padding(horizontal = 6.dp))
+
+                        Box(
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .height(36.dp)
+                                .weight(1f)
+                                .background(
+                                    color = colorResource(id = R.color.light_gray),
+                                    shape = RoundedCornerShape(4.dp)
+                                )
+                        ) {
+                            BasicTextField(
+                                value = message,
+                                onValueChange = { message = it },
+                                modifier = modifier
+                                    .padding(horizontal = 24.dp)
+                                    .background(colorResource(id = R.color.light_gray))
+                                    .align(Alignment.CenterStart)
+                            )
+                        }
+
+                        Spacer(modifier = modifier.padding(horizontal = 10.dp))
+
+                        if (message.isNotBlank()) {
+                            SendButton(message, onSend = {
+                                messages += Message(
+                                    id = UUID.randomUUID().toString(),
+                                    SenderID = "me",
+                                    audioUrl = null,
+                                    voiceUrl = null,
+                                    mediaUri = null,
+                                    text = message,
+                                    document = null,
+                                    location = null,
+                                    contact = null,
+                                    timestamp = System.currentTimeMillis()
+                                )
+                                message = ""
+                            })
+                        } else {
+                            VoiceRecorderBox(
+                                isRecording = isRecording,
+                                onRecordingStart = { file, recorder ->
+                                    isRecording = true
+                                    audioFile = file
+                                    recorderr = recorder
+                                },
+                                onRecordingCancel = { recorder, file ->
+                                    recorder?.stop()
+                                    recorder?.reset()
+                                    file?.delete()
+                                    isRecording = false
+                                },
+                                onRecordingFinish = { recorder, file ->
+                                    recorder?.stop()
+                                    recorder?.release()
+                                    file?.let {
+                                        val messageId = UUID.randomUUID().toString()
+                                        messages += Message(
+                                            id = messageId,
                                             SenderID = "me",
+                                            voiceUrl = it.absolutePath,
                                             audioUrl = null,
-                                            voiceUrl = null,
                                             mediaUri = null,
-                                            text = message,
+                                            text = null,
                                             document = null,
                                             location = null,
                                             contact = null,
                                             timestamp = System.currentTimeMillis()
                                         )
-                                    message = ""
-                                }
-                        )
-                    } else { // I should add a if statement if the record buttom is clicked i Don't know how it works nut i will figure it out.
-
-                        Box(
-                            modifier
-                                .align(Alignment.CenterVertically)
-                                .pointerInput(Unit) {
-                                    detectDragGestures(onDragStart = {
-                                        var file = File(context.cacheDir, "recorder_audio.mp3")
-                                        audioFile = file
-                                        recorder = MediaRecorder().apply {
-                                            setAudioSource(MediaRecorder.AudioSource.MIC)
-                                            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                                            setOutputFile(file.absolutePath)
-                                            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-                                            prepare()
-                                            start()
-                                        }
-                                        isRecording = true
-                                        drag = 0f
-                                    },
-                                        onDrag = { change, dragAmount ->
-                                            drag += dragAmount.x
-                                        },
-                                        onDragEnd = {
-                                            if (drag < -100f) {
-                                                recorder?.apply {
-                                                    stop()
-                                                    reset()
-                                                }
-                                                audioFile?.delete()
-                                            } else {
-                                                recorder?.apply {
-                                                    stop()
-                                                    release()
-                                                }
-                                                audioFile?.let { file ->
-                                                    val messageId = UUID
-                                                        .randomUUID()
-                                                        .toString()
-                                                    messages += Message(
-                                                        id = messageId,
-                                                        SenderID = "me",
-                                                        audioUrl = null,
-                                                        voiceUrl = file.absolutePath,
-                                                        mediaUri = null,
-                                                        text = null,
-                                                        document = null,
-                                                        location = null,
-                                                        contact = null,
-                                                        timestamp = System.currentTimeMillis()
-                                                    )
-                                                    insiderChatViewModel.getAmp(
-                                                        messageId = messageId,
-                                                        file = file.absolutePath
-                                                    )
-                                                }
-                                            }
-
-                                            isRecording = false
-                                            audioFile = null
-                                            recorder = null
-                                        })
-
-                                }) {
-                            if (isRecording) {
-                                var voiceSeconds by remember {
-                                    mutableStateOf(0)
-                                }
-                                var minutes by remember{
-                                    mutableStateOf(0)
-                                }
-                                LaunchedEffect(isRecording) {
-                                    while(isRecording){
-                                        if(voiceSeconds == 59){
-                                            minutes++
-                                            voiceSeconds=0
-                                        }
-                                        delay(1000)
-                                        voiceSeconds++
+                                        insiderChatViewModel.getAmp(messageId, it.absolutePath)
+                                        insiderChatViewModel.transcribeAudioFile(it.absolutePath)
                                     }
+                                    isRecording = false
                                 }
-                                BottomAppBar {
-                                    Text(text = "Recording: ${minutes}:${voiceSeconds}s — swipe left to cancel")
-                                }
-                            } else {
-                                androidx.compose.material3.Icon(
-                                    imageVector = Icons.Default.Call,
-                                    contentDescription = null,
-
-                                    )
-                            }
+                            )
 
                             if (galleryViewModel.userSend) {
                                 messages += Message(
-                                    id = UUID
-                                        .randomUUID()
-                                        .toString(),
+                                    id = UUID.randomUUID().toString(),
                                     SenderID = "me",
                                     audioUrl = null,
                                     voiceUrl = null,
@@ -302,14 +242,13 @@ fun InsiderChatScaffold(
                                 )
                                 mediaUri = hashMapOf()
                                 galleryViewModel.userSend = false
-
                             }
                         }
-
                     }
                 }
+
                 LaunchedEffect(messages) {
-                    if (!messages.isEmpty() && messages.last().SenderID == "me") {
+                    if (messages.isNotEmpty() && messages.last().SenderID == "me") {
                         delay(1000)
                         messages = messages + Message(
                             id = UUID.randomUUID().toString(),
@@ -325,25 +264,26 @@ fun InsiderChatScaffold(
                         )
                     }
                 }
+            } else {
+                LazyR(
+                    icon = Iconlist().getIcon(),
+                    onClose = { showIcons = false },
+                    galleryViewModel = galleryViewModel,
+                    navController = navController
+                )
             }
-        } else {
-            LazyR(
-                icon = Iconlist().getIcon(),
-                onClose = { showIcons = false },
-                galleryViewModel = galleryViewModel,
-                navController = navController
-            )
-
         }
-    }) { innerPadding ->
-
+    ) { innerPadding ->
         Box(modifier = modifier.padding(innerPadding)) {
-            InsiderChatScreen(messages = messages, insiderChatViewModel = insiderChatViewModel, galleryViewModel = galleryViewModel)
-
-
+            InsiderChatScreen(
+                messages = messages,
+                insiderChatViewModel = insiderChatViewModel,
+                galleryViewModel = galleryViewModel
+            )
         }
     }
 }
+
 
 @Composable
 fun InsiderChatScreen(
@@ -382,6 +322,7 @@ fun MessageInput(
 
 
 
+
     var isPressed: Boolean = false
     var context: Context = LocalContext.current
 
@@ -404,31 +345,47 @@ fun MessageInput(
         }
     } else if (message.voiceUrl != null) {
         Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(start = 64.dp, end = 8.dp),
+            modifier = modifier.fillMaxWidth()
+                .padding(start = 200.dp, end = 16.dp),
             horizontalArrangement = align
         ) {
             Box(
                 modifier = modifier
                     .background(color = color, shape = RoundedCornerShape(8.dp))
-                    .padding(8.dp)
             ) {
-                androidx.compose.material3.Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = null,
-                    modifier
-                        .align(Alignment.CenterStart)
-                        .clickable {
-                            insiderChatViewModel.playAudio(
-                                messageId = message.id,
-                                context,
-                                message.voiceUrl
-                            )
-                        })
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    androidx.compose.material3.Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = null,
+                        modifier = modifier
+                            .size(24.dp)
+                            .clickable {
+                                insiderChatViewModel.playAudio(
+                                    messageId = message.id,
+                                    context,
+                                    message.voiceUrl
+                                )
+                            }
+                    )
 
-                allAmp[message.id]?.let { AudioGraphic(amplitudes = it, progress = 0f, onSeek ={} , modifier = modifier.padding(start = 24.dp)) }
-            }
+                    Spacer(modifier = modifier.padding(4.dp))
+                    val amplitudes = insiderChatViewModel.storeAmp.collectAsState().value[message.id] ?: emptyList()
+                    val progress = insiderChatViewModel.progress.collectAsState().value
+                        AudioGraphic(
+                            amplitudes = amplitudes,
+                            progress = progress,
+                            onSeek = {
+
+                                    insiderChatViewModel.seekTo(it)
+                            },
+                            modifier = modifier.padding(end = 8.dp)
+                        )
+                    }
+                }
+
         }
     } else  {
 

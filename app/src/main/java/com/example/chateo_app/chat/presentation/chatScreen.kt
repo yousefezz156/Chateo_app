@@ -68,11 +68,11 @@ fun Scaffold_chat_screen(navController: NavController,modifier: Modifier = Modif
             )
         })
     },
-        bottomBar = {
-            BottomAppBar {
-                NavigationBottomBar()
-            }
-        }) { innerpadding ->
+//        bottomBar = {
+//            BottomAppBar {
+//                NavigationBottomBar(navController = navController)
+//            }
+//        }) { innerpadding ->
         Box(modifier = modifier.padding(innerpadding)) {
             LazyChatCol(navController= navController, ChatCardList().getChatCard())
         }
