@@ -49,17 +49,19 @@ import com.example.chateo_app.contact.presentation.mvi.ContactViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Scaffold_contact(viewModel: ContactViewModel,navController: NavController,modifier: Modifier = Modifier) {
-    Scaffold(topBar = {
+   Scaffold(
+//        bottomBar = {
+//            BottomAppBar {
+//                NavigationBottomBar(navController = navController, 0)
+//            }
+//        }
+        topBar = {
         TopAppBar(title = { Text(text = "Contacts") }, actions = {
             Icon(
                 imageVector = Icons.Filled.Add,
                 contentDescription = null, modifier = modifier.clickable { }
             )
         })
-    }, bottomBar = {
-        BottomAppBar {
-            NavigationBottomBar(navController = navController)
-        }
     }) { innerpadding ->
         Box(modifier = modifier.padding(innerpadding)) {
             Contact_screen(navController=navController,viewModel=viewModel)

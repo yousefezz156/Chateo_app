@@ -27,7 +27,7 @@ import androidx.navigation.NavController
 import com.example.chateo_app.R
 
 @Composable
-fun NavigationBottomBar(navController: NavController, modifier: Modifier = Modifier) {
+fun NavigationBottomBar(navController: NavController, currentRoute: String? ,modifier: Modifier = Modifier) {
     val navBottomItem = listOf(
 
         NavBBData("Contacts", R.drawable.contacts),
@@ -36,27 +36,20 @@ fun NavigationBottomBar(navController: NavController, modifier: Modifier = Modif
 
     )
 
-    var selectedIndexItem by remember {
-        mutableStateOf(0)
-    }
+    var selectedIndexItem by remember { mutableStateOf(0) }
+
 
     NavigationBar(modifier = modifier.background(color = Color.White)){
-        navBottomItem.forEachIndexed{index, item ->
-            NavigationBarItem(
-                selected =selectedIndexItem == index,
-                onClick = { selectedIndexItem = index
-                          if(selectedIndexItem == 0){
-                              //navigate to contacts
-                              navController.navigate("contact")
-                              }else if(selectedIndexItem == 1){
-                              //navigate to chats
-                              navController.navigate("mainchat")
+        navBottomItem.forEach{ item ->
 
-                          }else if(selectedIndexItem == 2){
-                              //navigate to settings
-                          }
+            val selected = currentRoute == item.iconName
+            NavigationBarItem(
+                selected =selected,
+                onClick = {
+                        if (!selected)
+                         navController.navigate(item.iconName)
                 },
-                icon = { if(selectedIndexItem != index){
+                icon = { if(selected){
                     item.icon.let { Icon(painter = painterResource(id = it), contentDescription =null , modifier.size(60.dp))}
                 }else{
                     Column (horizontalAlignment = Alignment.CenterHorizontally){
@@ -69,4 +62,5 @@ fun NavigationBottomBar(navController: NavController, modifier: Modifier = Modif
             )
         }
     }
+
 }
