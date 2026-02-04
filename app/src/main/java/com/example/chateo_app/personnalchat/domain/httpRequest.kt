@@ -3,6 +3,8 @@ package com.example.chateo_app.personnalchat.domain
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.SocketTimeoutException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
@@ -21,6 +23,10 @@ fun httpRequest(engine : HttpClientEngine): HttpClient{
         }
         install(Logging) {
             level = LogLevel.BODY
+        }
+
+        install(HttpTimeout){
+            socketTimeoutMillis=120_000;// the transcripting is taking long time and the defualt socket timeout value is not enough
         }
 
 
