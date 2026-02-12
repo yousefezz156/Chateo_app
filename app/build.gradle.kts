@@ -76,6 +76,21 @@ dependencies {
 
     val lifecycle_version = "2.8.7"
 
+    // Room
+    val room_version = "2.7.2"
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version") // Required for Coroutines/Flow support
+//    ksp("androidx.room:room-compiler:$room_version")
+
+    // Optional: Room Paging support if you plan to use Paging 3
+    implementation("androidx.room:room-paging:$room_version")
+
+    // Kotlin Coroutines
+    val coroutines_version = "1.9.0"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version")
+
+
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
 

@@ -1,7 +1,7 @@
 package com.example.chateo_app.personnalchat.domain
 
 import android.util.Log
-import com.example.chateo_app.personnalchat.data.entites.TranscriptResponse
+import com.example.chateo_app.personnalchat.domain.entites.TranscriptResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -10,7 +10,6 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
-import io.ktor.http.ContentDisposition.Companion.File
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.isSuccess
