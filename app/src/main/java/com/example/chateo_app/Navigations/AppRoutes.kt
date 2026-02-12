@@ -15,7 +15,7 @@ import com.example.chateo_app.chat.presentation.Scaffold_chat_screen
 import com.example.chateo_app.contact.presentation.Scaffold_contact
 import com.example.chateo_app.contact.presentation.mvi.ContactViewModel
 import com.example.chateo_app.personnalchat.insiderChat.InsiderChatScaffold
-import com.example.chateo_app.personnalchat.insiderChat.InsiderChatViewModel
+import com.example.chateo_app.personnalchat.insiderChat.MVI.InsiderChatViewModel
 import com.example.chateo_app.personnalchat.insiderChat.accesgallery.GalleryViewModel
 import com.example.chateo_app.personnalchat.insiderChat.accesgallery.Gallery_screen
 import com.example.chateo_app.verfication.presentation.Otp_screen

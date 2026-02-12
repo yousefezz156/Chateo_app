@@ -1,4 +1,4 @@
-package com.example.chateo_app.personnalchat.data.entites
+package com.example.chateo_app.personnalchat.domain.entites
 
 import kotlinx.serialization.Serializable
 import org.intellij.lang.annotations.Language
