@@ -1,6 +1,7 @@
 package com.example.chateo_app.personnalchat.domain.entites
 
 import android.net.Uri
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -27,8 +28,11 @@ data class MessageDetails(
     val audioUrl: String?,
     val voiceUrl: String?,
     val mediaUri: HashMap<Uri,String?>?,
+    @Embedded(prefix = "document_")
     val document: Document?,
+    @Embedded(prefix = "location_")
     val location: Location?,
+    @Embedded(prefix = "contact_")
     val contact: Contact?,
     val timestamp: Long
 )

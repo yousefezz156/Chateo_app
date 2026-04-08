@@ -5,34 +5,39 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.chateo_app.Navigations.AppRoutes
-import com.example.chateo_app.personnalchat.insiderChat.InsiderChatScaffold
-import com.example.chateo_app.personnalchat.insiderChat.accesgallery.Gallery_screen
+//import com.example.chateo_app.personnalchat.insiderChat.InsiderChatScaffold
+//import com.example.chateo_app.personnalchat.insiderChat.accesgallery.Gallery_screen
 import com.example.chateo_app.ui.theme.Chateo_appTheme
+import com.example.chateo_app.verfication.presentation.MVI.VerificationScreenViewModel
+import com.example.chateo_app.verfication.presentation.VerificationViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
+    private val verificationViewModel: VerificationScreenViewModel by viewModels {
+        VerificationViewModelFactory(applicationContext)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         ActivityCompat.requestPermissions(
             this,
             arrayOf(android.Manifest.permission.RECORD_AUDIO),
-            0)
-        super.onCreate(savedInstanceState)
+            0
+        )
         enableEdgeToEdge()
         setContent {
             Chateo_appTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    AppRoutes()
-//                    InsiderChatScaffold()
-
+                    AppRoutes(verificationViewModel = verificationViewModel)
                 }
             }
         }
     }
 }
-

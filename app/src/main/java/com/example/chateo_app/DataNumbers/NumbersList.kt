@@ -4,6 +4,7 @@ import android.content.Context
 import android.telephony.TelephonyManager
 import android.util.Log
 import androidx.compose.ui.text.toUpperCase
+import com.example.chateo_app.verfication.domain.Numbers
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import java.util.Locale
 
@@ -42,16 +43,4 @@ open class NumbersList {
 
     }
 
-    fun getDeviceNetworkCountry(context: Context):String{
-
-        val tm = context.getSystemService(TelephonyManager::class.java).networkCountryIso
-        Log.d("TAG", "getDeviceNetworkCountry: $tm")
-        val phoneNum = PhoneNumberUtil.getInstance()
-
-        val countryCode = phoneNum.getCountryCodeForRegion(tm.toString().uppercase() )
-        Log.d("TAG", "getDeviceNetworkCountry: $countryCode")
-
-        return "+$countryCode"
-
-    }
 }

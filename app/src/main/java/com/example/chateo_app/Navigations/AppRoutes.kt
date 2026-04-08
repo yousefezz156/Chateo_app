@@ -14,12 +14,15 @@ import androidx.navigation.navArgument
 import com.example.chateo_app.chat.presentation.Scaffold_chat_screen
 import com.example.chateo_app.contact.presentation.Scaffold_contact
 import com.example.chateo_app.contact.presentation.mvi.ContactViewModel
-import com.example.chateo_app.personnalchat.insiderChat.InsiderChatScaffold
+//import com.example.chateo_app.personnalchat.insiderChat.InsiderChatScaffold
+/*
 import com.example.chateo_app.personnalchat.insiderChat.MVI.InsiderChatViewModel
+*/
 import com.example.chateo_app.personnalchat.insiderChat.accesgallery.GalleryViewModel
-import com.example.chateo_app.personnalchat.insiderChat.accesgallery.Gallery_screen
-import com.example.chateo_app.verfication.presentation.Otp_screen
+//import com.example.chateo_app.personnalchat.insiderChat.accesgallery.Gallery_screen
+import com.example.chateo_app.Otp_screen
 import com.example.chateo_app.profileaccount.presentation.Profile_account
+import com.example.chateo_app.verfication.presentation.MVI.VerificationScreenViewModel
 
 import com.example.chateo_app.verfication.presentation.Verfication_phone
 //import com.example.chateo_app.verfication.presentation.SB_authViewModel
@@ -42,12 +45,13 @@ object AppRoutes {
 }
 
 @Composable
-fun AppRoutes() {
+fun AppRoutes(verificationViewModel: VerificationScreenViewModel) {
     val navController = rememberNavController()
 //    val authViewModel: SB_authViewModel = viewModel()
     val galleryViewModel: GalleryViewModel = viewModel()
-    val insiderChatViewModel: InsiderChatViewModel = viewModel()
+//    val insiderChatViewModel: InsiderChatViewModel = viewModel()
     val contactViewModel: ContactViewModel = viewModel()
+        //val verificationViewModel: VerificationScreenViewModel = viewModel()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
     val showBottomBar =  listOf(
@@ -67,15 +71,15 @@ fun AppRoutes() {
             }
         }
     ) { innerPadding ->
-        NavHost(navController = navController, startDestination = AppRoutes.MAIN_CONTACT) {
+        NavHost(navController = navController, startDestination = AppRoutes.VERIFICATION_PHONE) {
             composable(route = AppRoutes.TEXTCHAT) {
-                InsiderChatScaffold(
-                    galleryViewModel = galleryViewModel,
-                    insiderChatViewModel = insiderChatViewModel,
-                    navController = navController
-                )
+//                InsiderChatScaffold(
+//                    galleryViewModel = galleryViewModel,
+//                    insiderChatViewModel = insiderChatViewModel,
+//                    navController = navController
+//                )
             }
-            composable(route = AppRoutes.VERIFICATION_PHONE) { Verfication_phone(navController = navController) }
+            composable(route = AppRoutes.VERIFICATION_PHONE) { Verfication_phone(navController = navController, verficationScreenViewModel = verificationViewModel) }
             composable(
                 route = "${AppRoutes.OTP}/{total_phone}", arguments = listOf(
                     navArgument("total_phone") { type = NavType.StringType }
@@ -90,10 +94,10 @@ fun AppRoutes() {
 
             }
             composable(route = AppRoutes.GALLERY) {
-                Gallery_screen(
-                    galleryViewModel = galleryViewModel,
-                    navController = navController
-                )
+//                Gallery_screen(
+//                    galleryViewModel = galleryViewModel,
+//                    navController = navController
+//                )
             }
             composable(route = AppRoutes.MAIN_CONTACT) {
                 Scaffold_contact(navController = navController, viewModel = contactViewModel)

@@ -1,6 +1,7 @@
 package com.example.chateo_app.verfication.presentation
 
 import android.app.Activity
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,10 +34,12 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,20 +57,26 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.chateo_app.DataNumbers.Numbers
+import com.example.chateo_app.verfication.domain.Numbers
 import com.example.chateo_app.DataNumbers.NumbersList
 import com.example.chateo_app.Navigations.AppRoutes
 import com.example.chateo_app.R
+import com.example.chateo_app.verfication.presentation.MVI.VerficationScreenIntent
+import com.example.chateo_app.verfication.presentation.MVI.VerificationScreenViewModel
+
 //import com.example.chateo_app.supabase.model.ApiResponse
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Verfication_phone(modifier: Modifier = Modifier, navController: NavController) {
+fun Verfication_phone(
+    navController: NavController,
+    verficationScreenViewModel: VerificationScreenViewModel,
+    modifier: Modifier = Modifier
+) {
 
     val context = LocalContext.current
 
-    val countryDefaultCode= NumbersList().getDeviceNetworkCountry(context)
 
     // val navOTP by authViewModel.navigateToOtp.collectAsState()
     var showNumList by remember {
@@ -77,13 +86,30 @@ fun Verfication_phone(modifier: Modifier = Modifier, navController: NavControlle
         mutableStateOf<Numbers?>(null)
     }
 
-    var phone by remember {
+    var phone = remember {
+        mutableStateOf("")
+    }
+
+
+    val state by verficationScreenViewModel.state.collectAsState()
+
+    var phoneCode by remember {
+        mutableStateOf(state.defaultCode)
+    }
+    var total_phone by remember {
         mutableStateOf("")
     }
 
     //val isLoading by authViewModel.authresponse.collectAsState()
 
-    var PhoneNumber ="";
+    var PhoneNumber = "";
+
+    LaunchedEffect(state.numberSent) {
+        Log.d("why crash network", "i am here in launched effect")
+        if (state.numberSent) {
+            navController.navigate("${AppRoutes.OTP}/${total_phone}")
+        }
+    }
 
 
 
@@ -94,9 +120,16 @@ fun Verfication_phone(modifier: Modifier = Modifier, navController: NavControlle
     ) {
 
 
-        Text(text = stringResource(id = R.string.Enter_Phone_Number), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+        Text(
+            text = stringResource(id = R.string.Enter_Phone_Number),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
         Spacer(modifier = modifier.padding(12.dp))
-        Text(text = stringResource(id = R.string.Please_confirm_your_country_code_and_enter), fontSize = 12.sp)
+        Text(
+            text = stringResource(id = R.string.Please_confirm_your_country_code_and_enter),
+            fontSize = 12.sp
+        )
         Spacer(modifier = modifier.padding(8.dp))
         Text(text = stringResource(id = R.string.your_phone_number), fontSize = 12.sp)
         Spacer(modifier = modifier.padding(12.dp))
@@ -110,7 +143,11 @@ fun Verfication_phone(modifier: Modifier = Modifier, navController: NavControlle
                     .width(74.dp)
                     .clip(shape = RoundedCornerShape(2.dp)) // Specify exact size to confine clickable area
                     .background(color = colorResource(id = R.color.offWhite))
-                    .clickable { showNumList = true }
+                    .clickable {
+                        VerficationScreenIntent.LoadNumCodeList
+                        showNumList = true
+                    }
+
 
             ) {
                 Row(
@@ -119,58 +156,47 @@ fun Verfication_phone(modifier: Modifier = Modifier, navController: NavControlle
                     modifier = modifier.fillMaxWidth()
                 ) {
                     Spacer(modifier = modifier.padding(top = 40.dp))
-                    Text(text = if(isSelected!=null) isSelected?.num.toString() else countryDefaultCode, fontSize = 16.sp, textAlign = TextAlign.Center)
+                    Text(
+                        text = if (isSelected != null) isSelected?.num.toString() else state.defaultCode.toString(), fontSize = 16.sp, textAlign = TextAlign.Center
+                    )
+
+
+
+                    Log.d("why crash network", "${state.defaultCode}")
+
                 }
             }
 
             Spacer(modifier = modifier.padding(8.dp))
-            BasicTextField(
-                value = phone,
-                onValueChange = { phone = it },
-                singleLine = true,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height(46.dp),
-                decorationBox = { innerTextField ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(colorResource(id = R.color.offWhite))
-                            .padding(horizontal = 16.dp),
-                        contentAlignment = Alignment.CenterStart
-                    ) {
 
-                        // Placeholder
-                        if (phone.isEmpty()) {
-                            Text(
-                                text = stringResource(id = R.string.phoneNumber),
-                                fontSize = 12.sp,
-                                color = Color.Gray
-                            )
-                        }
-
-                        // Actual text field
-                        innerTextField()
-                    }
-                }
-            )
-
+            PhoneNumberTextField(phone)
 
         }
         Spacer(modifier = modifier.padding(8.dp))
         Button(
             onClick = {
-                val total_phone = "${isSelected?.num.orEmpty()}$phone".trim()
+                Log.d("phone number" , phone.value)
+                total_phone = if(isSelected!=null)"${isSelected?.num.orEmpty()}${phone.value}".trim() else "${state.defaultCode.toString()}${phone.value}".trim()
+
                 //val activity = context as Activity
-                if (isSelected != null ) {
+                if (total_phone!=null&& phone.value !="") {
                     //authViewModel.sendPhoneNumber(total_phone, activity)
-                    PhoneNumber = total_phone
-                    navController.navigate("${AppRoutes.OTP}/$PhoneNumber")
+
+                    verficationScreenViewModel.onEvent(
+                        VerficationScreenIntent.SendNumber(
+                            total_phone
+                        )
+                    )
+                    Log.d("why crash network", "i am here in button")
+
                 } else {
-                    Toast.makeText(context, "Please enter a valid phone number and country code", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Please enter a valid phone number and country code",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-                      },
+            },
 
             modifier = modifier
                 .fillMaxWidth()
@@ -181,13 +207,13 @@ fun Verfication_phone(modifier: Modifier = Modifier, navController: NavControlle
                 )
             )
         ) {
-                Text(stringResource(id = R.string.Send_OTP))
+            Text(stringResource(id = R.string.Send_OTP))
         }
 
         if (showNumList) {
             ModalBottomSheet(onDismissRequest = { showNumList = false }) {
                 LazyCol(
-                    number = NumbersList().numList(),
+                    number = state.listOfNum,
                     onClickNum = { selected ->
                         isSelected = selected
                         showNumList = false
@@ -224,10 +250,11 @@ fun NumCard(
     isSelected: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = modifier
-        .fillMaxWidth()
-        .size(20.dp)
-        .clickable { onClickNum(numbers) }) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .size(20.dp)
+            .clickable { onClickNum(numbers) }) {
         Text(text = numbers.flag, fontSize = 20.sp)
         Spacer(modifier = modifier.padding(8.dp))
         Text(text = numbers.num, fontSize = 16.sp)
@@ -238,8 +265,48 @@ fun NumCard(
     }
 }
 
+@Composable
+fun PhoneNumberTextField(phone: MutableState<String>, modifier: Modifier = Modifier) {
+
+    var phone by phone
+    BasicTextField(
+        value = phone,
+        onValueChange = { phone = it },
+        singleLine = true,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(46.dp),
+        decorationBox = { innerTextField ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(colorResource(id = R.color.offWhite))
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+
+                // Placeholder
+                if (phone.isEmpty()) {
+                    Text(
+                        text = stringResource(id = R.string.phoneNumber),
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+                }
+
+                // Actual text field
+                innerTextField()
+            }
+        }
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun Verfication_phone_Prev() {
-    Verfication_phone(navController = rememberNavController())
+    Verfication_phone(
+        navController = rememberNavController(),
+        verficationScreenViewModel = viewModel()
+    )
 }

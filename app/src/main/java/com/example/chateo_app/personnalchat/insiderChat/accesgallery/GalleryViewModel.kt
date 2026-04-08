@@ -13,19 +13,19 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class GalleryViewModel: ViewModel() {
 
-    val _selectedItems = MutableStateFlow<HashMap<Uri,String?>>(hashMapOf())
-    val selectedItems: StateFlow<HashMap<Uri, String?>> = _selectedItems
+    val _selectedItems = MutableStateFlow<HashMap<String,String?>>(hashMapOf())
+    val selectedItems: StateFlow<HashMap<String, String?>> = _selectedItems
 
     var userSend = false;
-    fun setSelectedItems(media: HashMap<Uri,String?>){
+    fun setSelectedItems(media: HashMap<String,String?>){
    _selectedItems.value=media
 
     }
 
-    fun updateSelectedItems(show:Uri, description:String?){
+    fun updateSelectedItems(show:String, description:String?){
         val currentMap =_selectedItems.value.toMutableMap()
         currentMap[show]=description
-        _selectedItems.value= currentMap as HashMap<Uri, String?>
+        _selectedItems.value= currentMap as HashMap<String, String?>
     }
 
     fun onConfirm(){

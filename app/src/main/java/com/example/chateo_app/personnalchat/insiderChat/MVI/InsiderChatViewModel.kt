@@ -4,40 +4,62 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chateo_app.personnalchat.data.ChateoDatabase
 import com.example.chateo_app.personnalchat.domain.PersonnalChatRepo
+import com.example.chateo_app.personnalchat.domain.PersonnalChatUseCase
 import com.example.chateo_app.personnalchat.domain.entites.MessageDetails
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
-class InsiderChatViewModel(val database: ChateoDatabase, val repo: PersonnalChatRepo = PersonnalChatRepo(database)) : ViewModel() {
-
-
-
-    val _state = MutableStateFlow(InsiderChatState())
-    var state = _state.asStateFlow()
-
-
-    fun onEvent(event: InsiderChatIntent){
-        when(event){
-            is InsiderChatIntent.SendTextMessage -> sendMessage()
-            else -> {}
-        }
-    }
-
-    fun sendMessage( message:  MessageDetails){
-        viewModelScope.launch {
-            // launch for db
-            val insertMessage= repo.insertMessage(message)
-
-            //async for network
-
-
-        }
-    }
-
-
-}
+//class InsiderChatViewModel(val database: ChateoDatabase, val repo: PersonnalChatRepo = PersonnalChatRepo(database), val useCase: PersonnalChatUseCase = PersonnalChatUseCase(repo)) : ViewModel() {
+//
+//
+//
+//
+//    val _state = MutableStateFlow(InsiderChatState())
+//    var state = _state.asStateFlow()
+//
+//
+//    fun onEvent(event: InsiderChatIntent){
+//        when(event){
+//            is InsiderChatIntent.SendTextMessage -> sendMessage(event.message, event.senderId, event.timestamp)
+//            else -> {}
+//        }
+//    }
+//
+//    fun sendMessage( message: String, senderId: String, timestamp: Long){
+//        viewModelScope.launch {
+//            // launch for db
+//            val insertMessage=MessageDetails(id = 0,
+//                senderId= senderId,
+//                receiverId=null,
+//                text=message ,
+//                audioUrl = null,
+//                voiceUrl = null,
+//                mediaUri = null,
+//                document = null,
+//                location = null,
+//                contact = null,
+//                timestamp= timestamp)
+//            repo.insertMessage(insertMessage)
+//
+//            //async for network
+//
+//
+//        }
+//    }
+//
+//    fun loadMessages(senderId: String, receiverId: String){
+//        viewModelScope.launch {
+//            useCase.getPersonnalChat().collect {
+//                _state.value = _state.value.copy(message = it)
+//
+//            }
+//        }
+//    }
+//
+//
+//}
 //// Enhanced ViewModel with better synchronization
 //class InsiderChatViewModel : ViewModel() {
 //    var currentAudioMessage by mutableStateOf<String?>(null)

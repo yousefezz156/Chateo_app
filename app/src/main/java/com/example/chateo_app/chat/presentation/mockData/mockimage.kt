@@ -1,7 +1,7 @@
 package com.example.chateo_app.chat.presentation.mockData
 
 import androidx.lifecycle.ViewModel
-import com.example.chateo_app.DataNumbers.Numbers
+import com.example.chateo_app.verfication.domain.Numbers
 import com.example.chateo_app.R
 
 open class MockImages: ViewModel() {

@@ -6,7 +6,8 @@ sealed class InsiderChatIntent {
     data class MediaMessage(val mediaContent: Map<String, String?>) :InsiderChatIntent()
     data class LocationMessage( val latitude: Double, val longitude: Double) : InsiderChatIntent()
     data class DocumentMessage(val name : String, val size : String, val type : String, val url : String) : InsiderChatIntent()
-    data class contactMessage(val name: String, val phoneNumber: String, val profileImageUrl: String?) : InsiderChatIntent()
+    data class ContactMessage(val name: String, val phoneNumber: String, val profileImageUrl: String?) : InsiderChatIntent()
+    data class VoiceMessage(val url:String?) : InsiderChatIntent()
 
     //message actions
     data class DeleteMessage(val messageId: String) : InsiderChatIntent()

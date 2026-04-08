@@ -76,6 +76,8 @@ dependencies {
 
     val lifecycle_version = "2.8.7"
 
+    implementation ("com.google.code.gson:gson:2.10.1")
+
     // Room
     val room_version = "2.7.2"
     implementation("androidx.room:room-runtime:$room_version")
@@ -133,6 +135,7 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.2.1")
 
     // Ktor core & engines
+    implementation("io.ktor:ktor-client-cio:2.3.6")
     implementation("io.ktor:ktor-client-core:2.3.6")
     implementation("io.ktor:ktor-client-okhttp:2.3.6") // OkHttp engine for Android
 
