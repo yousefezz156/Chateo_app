@@ -14,13 +14,14 @@ import androidx.navigation.navArgument
 import com.example.chateo_app.chat.presentation.Scaffold_chat_screen
 import com.example.chateo_app.contact.presentation.Scaffold_contact
 import com.example.chateo_app.contact.presentation.mvi.ContactViewModel
+import com.example.chateo_app.otp.presentation.MVI.OtpViewModel
 //import com.example.chateo_app.personnalchat.insiderChat.InsiderChatScaffold
 /*
 import com.example.chateo_app.personnalchat.insiderChat.MVI.InsiderChatViewModel
 */
 import com.example.chateo_app.personnalchat.insiderChat.accesgallery.GalleryViewModel
 //import com.example.chateo_app.personnalchat.insiderChat.accesgallery.Gallery_screen
-import com.example.chateo_app.Otp_screen
+import com.example.chateo_app.otp.presentation.Otp_screen
 import com.example.chateo_app.profileaccount.presentation.Profile_account
 import com.example.chateo_app.verfication.presentation.MVI.VerificationScreenViewModel
 
@@ -51,6 +52,7 @@ fun AppRoutes(verificationViewModel: VerificationScreenViewModel) {
     val galleryViewModel: GalleryViewModel = viewModel()
 //    val insiderChatViewModel: InsiderChatViewModel = viewModel()
     val contactViewModel: ContactViewModel = viewModel()
+    val otpViewModel: OtpViewModel = viewModel()
         //val verificationViewModel: VerificationScreenViewModel = viewModel()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
@@ -85,7 +87,7 @@ fun AppRoutes(verificationViewModel: VerificationScreenViewModel) {
                     navArgument("total_phone") { type = NavType.StringType }
                 )) { backStackEntry ->
                 val total_phone = backStackEntry.arguments?.getString("total_phone") ?: ""
-                Otp_screen(total_phone = total_phone, navController = navController)
+                Otp_screen(total_phone = total_phone, otpViewModel = otpViewModel,navController = navController)
             }
             composable(route = AppRoutes.PROFILE) { Profile_account(navController) }
             composable(route = AppRoutes.MAINCHAT) {
