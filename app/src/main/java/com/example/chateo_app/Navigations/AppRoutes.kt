@@ -22,6 +22,7 @@ import com.example.chateo_app.personnalchat.insiderChat.MVI.InsiderChatViewModel
 import com.example.chateo_app.personnalchat.insiderChat.accesgallery.GalleryViewModel
 //import com.example.chateo_app.personnalchat.insiderChat.accesgallery.Gallery_screen
 import com.example.chateo_app.otp.presentation.Otp_screen
+import com.example.chateo_app.profileaccount.presentation.MVI.ProfileViewModel
 import com.example.chateo_app.profileaccount.presentation.Profile_account
 import com.example.chateo_app.verfication.presentation.MVI.VerificationScreenViewModel
 
@@ -45,68 +46,70 @@ object AppRoutes {
 
 }
 
-@Composable
-fun AppRoutes(verificationViewModel: VerificationScreenViewModel) {
-    val navController = rememberNavController()
-//    val authViewModel: SB_authViewModel = viewModel()
-    val galleryViewModel: GalleryViewModel = viewModel()
-//    val insiderChatViewModel: InsiderChatViewModel = viewModel()
-    val contactViewModel: ContactViewModel = viewModel()
-    val otpViewModel: OtpViewModel = viewModel()
-        //val verificationViewModel: VerificationScreenViewModel = viewModel()
-    val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = currentBackStackEntry?.destination?.route
-    val showBottomBar =  listOf(
-        "Contacts",
-        "Chats",
-        "Settings"
-    )
-
-
-    Scaffold(
-        bottomBar = {
-            if (currentRoute in showBottomBar) {
-            BottomAppBar {
-
-                    NavigationBottomBar(navController, currentRoute)
-                }
-            }
-        }
-    ) { innerPadding ->
-        NavHost(navController = navController, startDestination = AppRoutes.VERIFICATION_PHONE) {
-            composable(route = AppRoutes.TEXTCHAT) {
-//                InsiderChatScaffold(
-//                    galleryViewModel = galleryViewModel,
-//                    insiderChatViewModel = insiderChatViewModel,
-//                    navController = navController
-//                )
-            }
-            composable(route = AppRoutes.VERIFICATION_PHONE) { Verfication_phone(navController = navController, verficationScreenViewModel = verificationViewModel) }
-            composable(
-                route = "${AppRoutes.OTP}/{total_phone}", arguments = listOf(
-                    navArgument("total_phone") { type = NavType.StringType }
-                )) { backStackEntry ->
-                val total_phone = backStackEntry.arguments?.getString("total_phone") ?: ""
-                Otp_screen(total_phone = total_phone, otpViewModel = otpViewModel,navController = navController)
-            }
-            composable(route = AppRoutes.PROFILE) { Profile_account(navController) }
-            composable(route = AppRoutes.MAINCHAT) {
-                Scaffold_chat_screen(navController)
-
-
-            }
-            composable(route = AppRoutes.GALLERY) {
-//                Gallery_screen(
-//                    galleryViewModel = galleryViewModel,
-//                    navController = navController
-//                )
-            }
-            composable(route = AppRoutes.MAIN_CONTACT) {
-                Scaffold_contact(navController = navController, viewModel = contactViewModel)
-
-
-            }
-        }
-
-    }
-}
+//@Composable
+//fun AppRoutes(verificationScreenViewModel: VerificationScreenViewModel) {
+//    val navController = rememberNavController()
+////    val authViewModel: SB_authViewModel = viewModel()
+//    val galleryViewModel: GalleryViewModel = viewModel()
+////    val insiderChatViewModel: InsiderChatViewModel = viewModel()
+//    val contactViewModel: ContactViewModel = viewModel()
+//    val otpViewModel: OtpViewModel = viewModel()
+//   // val verificationViewModel: VerificationScreenViewModel = viewModel()
+//    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+//    val currentRoute = currentBackStackEntry?.destination?.route
+//    val showBottomBar =  listOf(
+//        "Contacts",
+//        "Chats",
+//        "Settings"
+//    )
+//
+//    val profileViewModel: ProfileViewModel=viewModel()
+//
+//
+//    Scaffold(
+//        bottomBar = {
+//            if (currentRoute in showBottomBar) {
+//            BottomAppBar {
+//
+//                    NavigationBottomBar(navController, currentRoute)
+//                }
+//            }
+//        }
+//    ) { innerPadding ->
+//        NavHost(navController = navController, startDestination = AppRoutes.PROFILE) {
+//            composable(route = AppRoutes.TEXTCHAT) {
+////                InsiderChatScaffold(
+////                    galleryViewModel = galleryViewModel,
+////                    insiderChatViewModel = insiderChatViewModel,
+////                    navController = navController
+////                )
+//            }
+//            composable(route = AppRoutes.VERIFICATION_PHONE) { Verfication_phone(navController = navController, verficationScreenViewModel = verificationScreenViewModel) }
+//            composable(
+//                route = "${AppRoutes.OTP}/{total_phone}", arguments = listOf(
+//                    navArgument("total_phone") { type = NavType.StringType }
+//                )) { backStackEntry ->
+//                val total_phone = backStackEntry.arguments?.getString("total_phone") ?: ""
+//                Otp_screen(total_phone = total_phone, otpViewModel = otpViewModel,navController = navController)
+//            }
+//            composable(route = AppRoutes.PROFILE) { Profile_account(profileViewModel=profileViewModel,navController) }
+//            composable(route = AppRoutes.MAINCHAT) {
+//                Scaffold_chat_screen(navController)
+//
+//
+//            }
+//            composable(route = AppRoutes.GALLERY) {
+////                Gallery_screen(
+////                    galleryViewModel = galleryViewModel,
+////                    navController = navController
+////                )
+//            }
+//            composable(route = AppRoutes.MAIN_CONTACT) {
+//                Scaffold_contact(navController = navController, viewModel = contactViewModel)
+//
+//
+//            }
+//        }
+//
+//    }
+//}

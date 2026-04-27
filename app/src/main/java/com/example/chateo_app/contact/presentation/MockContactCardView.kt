@@ -29,9 +29,14 @@ import com.example.chateo_app.contact.mockData.MockDataContact
 import io.ktor.websocket.Frame
 
 @Composable
-fun MockContactCardView(navController: NavController,mockDataContact: MockDataContact,modifier: Modifier = Modifier) {
-    Card(modifier = modifier.fillMaxWidth().padding(top=8.dp).clickable{navController.navigate(
-        AppRoutes.TEXTCHAT)}) {
+fun MockContactCardView(
+    onClick : ()->Unit,
+    //navController: NavController,
+    mockDataContact: MockDataContact,
+    modifier: Modifier = Modifier) {
+    Card(modifier = modifier.fillMaxWidth().padding(top=8.dp)
+    )
+    {
         Row(modifier= modifier.padding(8.dp)) {
             Box{
                 Box {
@@ -61,5 +66,4 @@ fun MockContactCardView(navController: NavController,mockDataContact: MockDataCo
 @Preview
 @Composable
 private fun CardPrev() {
-    MockContactCardView(navController = rememberNavController(),mockDataContact = MockDataContact(R.drawable.ph1, "Yousef", "Ezz", true))
-}
+    }

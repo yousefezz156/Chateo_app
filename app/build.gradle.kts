@@ -16,7 +16,7 @@ android {
         buildConfig = true
     }
     namespace = "com.example.chateo_app"
-    compileSdk = 35
+    compileSdk = 36
     val localProperties = Properties()
     val localPropertiesFile = rootProject.file("local.properties")
 
@@ -30,7 +30,7 @@ android {
     defaultConfig {
         applicationId = "com.example.chateo_app"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -153,6 +153,11 @@ dependencies {
     // country code
     implementation("com.googlecode.libphonenumber:libphonenumber:8.13.27")
 
+
+    //navigation 3
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
 
 }

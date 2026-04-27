@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.chateo_app.Navigations.AppRoutes
+import com.example.chateo_app.Navigations.navigation3.MainAppRoutes
+import com.example.chateo_app.profileaccount.presentation.MVI.ProfileViewModel
 //import com.example.chateo_app.personnalchat.insiderChat.InsiderChatScaffold
 //import com.example.chateo_app.personnalchat.insiderChat.accesgallery.Gallery_screen
 import com.example.chateo_app.ui.theme.Chateo_appTheme
@@ -24,6 +26,7 @@ class MainActivity : ComponentActivity() {
         VerificationViewModelFactory(applicationContext)
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ActivityCompat.requestPermissions(
@@ -35,7 +38,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             Chateo_appTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    AppRoutes(verificationViewModel = verificationViewModel)
+                    //AppRoutes(verificationViewModel)
+                    MainAppRoutes(verificationViewModel)
                 }
             }
         }

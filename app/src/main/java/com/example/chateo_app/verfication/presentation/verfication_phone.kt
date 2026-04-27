@@ -70,7 +70,8 @@ import com.example.chateo_app.verfication.presentation.MVI.VerificationScreenVie
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Verfication_phone(
-    navController: NavController,
+//    navController: NavController,
+    onClick:() -> Unit,
     verficationScreenViewModel: VerificationScreenViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -107,7 +108,7 @@ fun Verfication_phone(
     LaunchedEffect(state.numberSent) {
         Log.d("why crash network", "i am here in launched effect")
         if (state.numberSent) {
-            navController.navigate("${AppRoutes.OTP}/${total_phone}")
+            onClick()
         }
     }
 
@@ -305,8 +306,8 @@ fun PhoneNumberTextField(phone: MutableState<String>, modifier: Modifier = Modif
 @Preview(showBackground = true)
 @Composable
 fun Verfication_phone_Prev() {
-    Verfication_phone(
-        navController = rememberNavController(),
-        verficationScreenViewModel = viewModel()
-    )
+//    Verfication_phone(
+////        navController = rememberNavController(),
+//        verficationScreenViewModel = viewModel()
+//    )
 }

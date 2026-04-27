@@ -32,6 +32,8 @@ import com.example.chateo_app.R
 
 @Composable
 fun ProfileImage(selectedImageUri: Uri?,onClick: () -> Unit,modifier: Modifier = Modifier) {
+   // var selectedImageUri by remember { mutableStateOf(selectedImageUri) }
+
     Box {
         // Profile Circle
         Box(

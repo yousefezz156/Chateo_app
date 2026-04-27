@@ -48,7 +48,10 @@ import com.example.chateo_app.otp.presentation.MVI.OtpIntent
 import com.example.chateo_app.otp.presentation.MVI.OtpViewModel
 
 @Composable
-fun OtpTextField(value: MutableState<String>, focusRequester: FocusRequester, nextFocusRequester: FocusRequester?=null) {
+fun OtpTextField(
+    value: MutableState<String>,
+    focusRequester: FocusRequester,
+    nextFocusRequester: FocusRequester?=null) {
     var value by value
     Box(
         modifier = Modifier
@@ -72,7 +75,12 @@ fun OtpTextField(value: MutableState<String>, focusRequester: FocusRequester, ne
 }
 
 @Composable
-fun Otp_screen(navController: NavController, otpViewModel: OtpViewModel,total_phone: String, modifier: Modifier = Modifier) {
+fun Otp_screen(
+    //navController: NavController,
+    onClick:()->Unit,
+    otpViewModel: OtpViewModel,
+    total_phone: String,
+    modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     val state by otpViewModel.state.collectAsState()
@@ -130,8 +138,8 @@ fun Otp_screen(navController: NavController, otpViewModel: OtpViewModel,total_ph
                 if (text1.value.length == 1 && text2.value.length == 1 && text3.value.length == 1 && text4.value.length == 1 && text5.value.length == 1 && text6.value.length == 1  /*check the confirmation code*/) {
 
                     OtpIntent.SendOtp(otp.toInt())
-                    navController.navigate(AppRoutes.PROFILE)
-
+                   // navController.navigate(AppRoutes.PROFILE)
+                    onClick()
                 } else {
                     Toast.makeText(
                         activity,

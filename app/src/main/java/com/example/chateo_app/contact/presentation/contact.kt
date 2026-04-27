@@ -48,7 +48,11 @@ import com.example.chateo_app.contact.presentation.mvi.ContactViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Scaffold_contact(viewModel: ContactViewModel,navController: NavController,modifier: Modifier = Modifier) {
+fun Scaffold_contact(
+    viewModel: ContactViewModel,
+    onClick:()->Unit,
+    //navController: NavController,
+    modifier: Modifier = Modifier) {
    Scaffold(
 //        bottomBar = {
 //            BottomAppBar {
@@ -64,14 +68,21 @@ fun Scaffold_contact(viewModel: ContactViewModel,navController: NavController,mo
         })
     }) { innerpadding ->
         Box(modifier = modifier.padding(innerpadding)) {
-            Contact_screen(navController=navController,viewModel=viewModel)
+            Contact_screen(
+                onClick = {onClick()},
+                //navController=navController,
+                viewModel=viewModel)
         }
     }
 
 }
 
 @Composable
-fun Contact_screen(modifier: Modifier = Modifier, navController: NavController,viewModel: ContactViewModel) {
+fun Contact_screen(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    //navController: NavController,
+     viewModel: ContactViewModel) {
    // val searchText by viewModel.searchText.collectAsState()
 
     var searchText by remember { mutableStateOf("") }
@@ -156,12 +167,19 @@ fun Contact_screen(modifier: Modifier = Modifier, navController: NavController,v
             Spacer(modifier = modifier.padding(8.dp))
 
             }
-        contactLazyColumn(navController = navController,viewModel = viewModel)
+        contactLazyColumn(
+            onClick = {onClick()},
+            //navController = navController,
+            viewModel = viewModel)
         }
     }
 
 @Composable
-fun contactLazyColumn(navController: NavController,viewModel: ContactViewModel,modifier: Modifier = Modifier) {
+fun contactLazyColumn(
+    onClick: () -> Unit,
+    //navController: NavController,
+    viewModel: ContactViewModel,
+    modifier: Modifier = Modifier) {
 
     val contact by viewModel.state.collectAsState()
 
@@ -170,7 +188,10 @@ fun contactLazyColumn(navController: NavController,viewModel: ContactViewModel,m
     LazyColumn {
         items(contact.mockContacts){
             contact ->
-            MockContactCardView(navController = navController,mockDataContact = contact)
+            MockContactCardView(
+                onClick = {onClick()},
+                //navController = navController,
+                mockDataContact = contact)
             Log.d("contact", contact.toString())
         }
     }

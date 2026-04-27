@@ -1,5 +1,6 @@
 package com.example.chateo_app.profileaccount.presentation
 
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,6 +27,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,15 +52,26 @@ import coil3.compose.AsyncImage
 import coil3.toCoilUri
 import com.example.chateo_app.Navigations.AppRoutes
 import com.example.chateo_app.R
+import com.example.chateo_app.profileaccount.presentation.MVI.ProfileEvent
+import com.example.chateo_app.profileaccount.presentation.MVI.ProfileViewModel
 
 @Composable
-fun Profile_account(navController: NavController, modifier: Modifier = Modifier) {
-    var firstName by remember {
+fun Profile_account(
+
+    profileViewModel: ProfileViewModel,
+//    navController: NavController,
+    onClick:()->Unit,
+    modifier: Modifier = Modifier) {
+
+    val state by profileViewModel.state.collectAsState()
+
+    var firstName = remember {
         mutableStateOf("")
     }
-    var lastName by remember {
+    var lastName = remember {
         mutableStateOf("")
     }
+
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     val galleryLauncher = rememberLauncherForActivityResult(
@@ -68,6 +82,8 @@ fun Profile_account(navController: NavController, modifier: Modifier = Modifier)
     )
 
     val context = LocalContext.current
+
+
 
 
     Column(
@@ -87,25 +103,29 @@ fun Profile_account(navController: NavController, modifier: Modifier = Modifier)
         Spacer(modifier = modifier.padding(12.dp))
 
         ScreenTextField(
-            name = firstName, onValueChange = { firstName = it }, placeHolder = stringResource(
+            value = firstName ,
+            onValueChange= {firstName.value=it
+                profileViewModel.event(ProfileEvent.FirstNameChanged(it))},
+            placeHolder = stringResource(
                 id = R.string.firstName
             )
         )
 
         Spacer(modifier = modifier.padding(12.dp))
         ScreenTextField(
-            name = lastName, onValueChange = { lastName = it }, placeHolder = stringResource(
+            value = lastName,
+            onValueChange= {lastName.value=it
+                profileViewModel.event(ProfileEvent.LastNameChanged(it))},
+            placeHolder = stringResource(
                 id = R.string.lastName
             )
         )
         Spacer(modifier = modifier.padding(32.dp))
         Button(
             onClick = {
-                if (firstName.isNotBlank())
-                    navController.navigate(route = AppRoutes.MAIN_CONTACT)
-                else
-                    Toast.makeText(context, "Please enter your first name", Toast.LENGTH_SHORT)
-                        .show()
+               profileViewModel.event( ProfileEvent.SaveButton)
+                onClick()
+                Log.d("profilename", state.firstName)
             },
             modifier = modifier
                 .fillMaxWidth()
@@ -120,13 +140,16 @@ fun Profile_account(navController: NavController, modifier: Modifier = Modifier)
 
 @Composable
 fun ScreenTextField(
-    name: String,
+    value: MutableState<String>,
     onValueChange: (String) -> Unit,
     placeHolder: String,
     modifier: Modifier = Modifier
 ) {
-    TextField(value = name,
-        onValueChange = { onValueChange(it) },
+
+    var value by value
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
         textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black),
         colors = TextFieldDefaults.colors(
             focusedContainerColor = colorResource(id = R.color.offWhite),
@@ -149,5 +172,5 @@ fun ScreenTextField(
 @Preview(showBackground = true)
 @Composable
 private fun Profile_account_prev() {
-    Profile_account(rememberNavController())
+    //Profile_account(rememberNavController())
 }

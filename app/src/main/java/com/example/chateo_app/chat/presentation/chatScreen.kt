@@ -52,7 +52,10 @@ import com.example.chateo_app.chat.presentation.ChatCard.ChatCardList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Scaffold_chat_screen(navController: NavController,modifier: Modifier = Modifier) {
+fun Scaffold_chat_screen(
+    onClick:() -> Unit,
+    //navController: NavController,
+    modifier: Modifier = Modifier) {
     Scaffold(topBar = {
         TopAppBar(title = { Text(text = "Chats") }, actions = {
             Icon(
@@ -75,22 +78,38 @@ fun Scaffold_chat_screen(navController: NavController,modifier: Modifier = Modif
 //        }
         ) { innerpadding ->
         Box(modifier = modifier.padding(innerpadding)) {
-            LazyChatCol(navController= navController, ChatCardList().getChatCard())
+            LazyChatCol(
+                //navController= navController,
+                onClick= {onClick()},
+                ChatCardList().getChatCard())
         }
     }
 }
 
 @Composable
-fun LazyChatCol(navController: NavController, chatCard : List<ChatCard>, modifier: Modifier = Modifier) {
+fun LazyChatCol(
+    onClick: () -> Unit,
+    //navController: NavController,
+    chatCard : List<ChatCard>,
+    modifier: Modifier = Modifier) {
     LazyColumn {
         items(chatCard){ chats ->
-            Chat_screen(chatCard = chats, navController)
+            Chat_screen(
+                chatCard = chats,
+                //navController
+                onClick = {onClick()}
+            )
         }
     }
 }
 
 @Composable
-fun Chat_screen(chatCard: ChatCard, navController: NavController, viewModel: ChatViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), modifier: Modifier = Modifier) {
+fun Chat_screen(
+    chatCard: ChatCard,
+    onClick: () -> Unit,
+    //navController: NavController,
+    viewModel: ChatViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    modifier: Modifier = Modifier) {
 
     val searchText by viewModel.searchText.collectAsState()
     Column(modifier = modifier.fillMaxSize()) {
@@ -165,7 +184,7 @@ fun Chat_screen(chatCard: ChatCard, navController: NavController, viewModel: Cha
                 Card(modifier = modifier
                     .fillMaxWidth()
                     .padding(8.dp)
-                    .clickable {  }) {
+                    .clickable {  onClick()}) {
                     Row(modifier = modifier.background(color = Color.White)) {
                         Box {
                             Box (modifier = modifier
@@ -223,5 +242,5 @@ fun Chat_screen(chatCard: ChatCard, navController: NavController, viewModel: Cha
 @Preview
 @Composable
 private fun Chat_screen_prev() {
-    Scaffold_chat_screen(rememberNavController())
+    //Scaffold_chat_screen(rememberNavController())
 }
